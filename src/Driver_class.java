@@ -65,14 +65,44 @@ public static final int Quantum = 3;
 
 
     public static void Round_Robin(ArrayList processes) {
+            int processINdex = 0;//
+            int Psize =processes.size() ;
             PCB process;
-            ArrayList<PCB> waitingQ ;
         int cpu_time;
-            for (int each=0 ; processCounterRR>0 ;each++){
-               process = (PCB) processes.get(each);
+        int current_time=0;
 
-                    if (process.getCPU_burst()> 3){
+//
+//        while (!processes.isEmpty()){
+//            process = (PCB) processes.get(processINdex);
+//            if (process.getCPU_burst()> 3){
+//                process.setCPU_burst(process.getCPU_burst()-3);
+//                processes.add(process);
+//                processINdex++;
+//            }else {
+//                int p = process.getCPU_burst();
+//
+//                process.setCPU_burst(0);
+//                processCounterRR--;
+//                if(processes.remove(p)){
+//
+//                } }}
+
+
+            for (int i=0 ; processes.size()>i ;i++){
+               process = (PCB) processes.get(i);
+
+                    if (process.getTemp_CPU_burst()> 3){
                         process.setCPU_burst(process.getCPU_burst()-3);
+
+                    }else {
+                        if (process.getTemp_CPU_burst() <= 3) {
+                            process.setTermination_time(current_time + process.getCPU_burst());
+                            process.setTurnaround_time(current_time - process.getArrival_time());
+                            current_time += process.getCPU_burst();
+                            process.setWaiting_time(process.getTurnaround_time()-process.getCPU_burst());  //;
+                           process.setCPU_burst(0);
+                            processes.remove(i);}
+                        processCounterRR--;
                     }
             }
     }
