@@ -1,15 +1,15 @@
 
 public class PCB {
 	 String ProcessID ;
-	   int priority ;
-	   int arrival_time ; // not sure of the type
-	   int CPU_burst ;
-	   int Start_Time;
-	   int termination_time;
-	   int Turnaround_time ;
-	   int Waiting_time;
-	   int  Response_time;
-	   int processCount = 0;
+	   private int priority ;
+	private int arrival_time ; // not sure of the type
+	private int CPU_burst ;
+	private int Start_Time;
+	private int termination_time;
+	private int Turnaround_time ;
+	private int Waiting_time;
+	private  int  Response_time;
+	private int processCount = 0;
 	   public PCB( int priority, int arrival_time, int CPU_burst) {
 		   
 		    processCount++;
@@ -58,8 +58,12 @@ public class PCB {
 	public void setResponse_time(int response_time) {
 		Response_time = response_time;
 	}
-	   
-	   
 
-
+	public int getCPU_burst() {
+		return CPU_burst;
 	}
+
+	public void setCPU_burst(int CPU_burst) {
+		this.CPU_burst = CPU_burst;
+	}
+}
