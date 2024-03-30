@@ -13,8 +13,8 @@ public class PCB {
 	private int processCount = 0;
 	   public PCB( int priority, int arrival_time, int CPU_burst) {
 		   
-		    processCount++;
-		    this.ProcessID = "P" + processCount; 
+		   // processCount++; // wrong cause it keeps being 1
+		  //  this.ProcessID = "P" + processCount;
 		    this.priority = priority;
 		    this.arrival_time = arrival_time;
 		    this.CPU_burst = CPU_burst;
@@ -26,7 +26,15 @@ public class PCB {
 		    this.Response_time = 0;
 		   
 	   }
-	   
+
+	public void setProcessID(String processID) {
+		ProcessID = processID;
+	}
+
+	public String getProcessID() {
+		return ProcessID;
+	}
+
 	public int getProcessCount() {
 		return processCount;
 	}
