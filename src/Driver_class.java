@@ -27,8 +27,8 @@ public static final int Quantum = 3;
                         System.out.print("Number of processes: ");
                         int numProcesses = scanner.nextInt();
 
-                        ArrayList<PCB> q1 = new ArrayList<>();
-                        ArrayList<PCB> q2 = null;
+            	     ArrayList<PCB> q1= new ArrayList<>(); 
+					 ArrayList<PCB> q2= new ArrayList<>();
                         for (int i = 0; i < numProcesses; i++) {
 
                             System.out.print("Enter priority (1 or 2): ");
@@ -46,6 +46,7 @@ public static final int Quantum = 3;
                                 q2.add(process);
                         }
                         Round_Robin(q1);
+                         System.out.println(q1);
 
                         break;
                     case 2:
@@ -65,46 +66,99 @@ public static final int Quantum = 3;
 
         }
 
+	 public static void Round_Robin(ArrayList<PCB> processes) {
+         int processINdex = 0;//
+      
+     int current_time=0;
 
-    public static void Round_Robin(ArrayList processes) {
-            int processINdex = 0;//
-            PCB process;
-        int current_time=0;
-//        while (!processes.isEmpty()){
-//            process = (PCB) processes.get(processINdex);
-//            if (process.getCPU_burst()> 3){
-//                process.setCPU_burst(process.getCPU_burst()-3);
-//                processes.add(process);
-//                processINdex++;
-//            }else {
-//                int p = process.getCPU_burst();
+     Queue<PCB> readyQueue = new LinkedList<>(processes);
+    
+     PCB process = null ;
+     while (!readyQueue.isEmpty()) {
+          process = readyQueue.poll();
+         
+         if (process.getStart_Time() == -1) {
+        	 process.setStart_Time(current_time);
+         }
+                 if (process.getCPU_burst()> Quantum){
+                     process.setCPU_burst(process.getCPU_burst()-Quantum);
+                     current_time += Quantum;
+                     //System.out.println("num of process: " +processes.size() +"\nID:"+process.getProcessID()+"\nindex:"+ processes.indexOf(process) + " is not done\n");
+                    // processes.add(process);
+                     readyQueue.add(process); 
+                 }else {
+                    // if (process.getTemp_CPU_burst() <= Quantum) {
+                        // System.out.println(process.getProcessID() +" is done \n");
+                         process.setTermination_time(current_time + process.getCPU_burst());
+                        // process.setTurnaround_time(current_time - process.getArrival_time());
+                         current_time += process.getCPU_burst();
+                        // process.setWaiting_time(process.getTurnaround_time()-process.getCPU_burst());  //;
+                         process.setCPU_burst(0);
+                         
+                          //processes.remove(i);
+                        // }
+                     processCounterRR--;
+                 }
+ 
+         }
+   
+         
+
+         
+         
+         
+         
+         
+         
+ }
+	 
+	 
+	 /* public static void Round_Robin(ArrayList processes) {
+          int processINdex = 0;//
+          PCB process;
+      int current_time=0;
+//      while (!processes.isEmpty()){
+//          process = (PCB) processes.get(processINdex);
+//          if (process.getCPU_burst()> 3){
+//              process.setCPU_burst(process.getCPU_burst()-3);
+//              processes.add(process);
+//              processINdex++;
+//          }else {
+//              int p = process.getCPU_burst();
 //
-//                process.setCPU_burst(0);
-//                processCounterRR--;
-//                if(processes.remove(p)){
+//              process.setCPU_burst(0);
+//              processCounterRR--;
+//              if(processes.remove(p)){
 //
-//                } }}
-            for (int i=0 ; processes.size()>i ;i++){
-               process = (PCB) processes.get(i);
+//              } }}
+          for (int i=0 ; processes.size()>i ;i++){
+             process = (PCB) processes.get(i);
 
-                    if (process.getTemp_CPU_burst()> 3){
-                        process.setCPU_burst(process.getTemp_CPU_burst()-Quantum);
-                        System.out.println("num of process: " +processes.size() +"\nID:"+process.getProcessID()+"\nindex:"+ processes.indexOf(process) + " is not done\n");
-                        processes.add(process);
+                  if (process.getTemp_CPU_burst()> 3){
+                      process.setCPU_burst(process.getTemp_CPU_burst()-Quantum);
+                      System.out.println("num of process: " +processes.size() +"\nID:"+process.getProcessID()+"\nindex:"+ processes.indexOf(process) + " is not done\n");
+                      processes.add(process);
 
-                    }else {
-                        if (process.getTemp_CPU_burst() <= 3) {
-                            System.out.println(process.getProcessID() +" is done \n");
-                            process.setTermination_time(current_time + process.getCPU_burst());
-                            process.setTurnaround_time(current_time - process.getArrival_time());
-                            current_time += process.getCPU_burst();
-                            process.setWaiting_time(process.getTurnaround_time()-process.getCPU_burst());  //;
-                           process.setCPU_burst(0);
-                            processes.remove(i);}
-                        processCounterRR--;
-                    }
-            }
-    }
+                  }else {
+                      if (process.getTemp_CPU_burst() <= 3) {
+                          System.out.println(process.getProcessID() +" is done \n");
+                          process.setTermination_time(current_time + process.getCPU_burst());
+                          process.setTurnaround_time(current_time - process.getArrival_time());
+                          current_time += process.getCPU_burst();
+                          process.setWaiting_time(process.getTurnaround_time()-process.getCPU_burst());  //;
+                         process.setCPU_burst(0);
+                          processes.remove(i);}
+                      processCounterRR--;
+                  }
+          } */
+	 
+
+
+
+	
+
+	 
+	 
 
 
 }
