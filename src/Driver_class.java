@@ -1,10 +1,13 @@
 import java.util.ArrayList;
+import java.util.LinkedList;
+import java.util.Queue;
 import java.util.Scanner;
 
 public class Driver_class {
-    public static ArrayList<PCB> Q1;
+    public static Queue<PCB> Q1 = new LinkedList<>();
     public static ArrayList<PCB> Q2;
     public static int processCounterRR;
+    public static int current_time;
 public static final int Quantum = 3;
     public static ArrayList<PCB> readyQ ;
 
@@ -27,7 +30,8 @@ public static final int Quantum = 3;
                         System.out.print("Number of processes: ");
                         int numProcesses = scanner.nextInt();
 
-            	     ArrayList<PCB> q1= new ArrayList<>(); 
+                        Queue<PCB> q1= new LinkedList<>();
+                       // ArrayList<PCB> q1= new ArrayList<>();
 					 ArrayList<PCB> q2= new ArrayList<>();
                         for (int i = 0; i < numProcesses; i++) {
 
@@ -38,15 +42,19 @@ public static final int Quantum = 3;
                             System.out.print("Enter CPU burst: ");
                             int cpu_burst = scanner.nextInt();
                             scanner.nextLine();
+
                             PCB process = new PCB(priority, arrival_time, cpu_burst);
                             if (priority == 1){
                                 q1.add(process);
-                            process.setProcessID("P" +processCounterRR++);}
+                            process.setProcessID("P" + ++processCounterRR);}
                             else
                                 q2.add(process);
                         }
+                        //Q1 = Round_Robin((Queue<PCB>) q1);
+
                         Round_Robin(q1);
-                         System.out.println(q1);
+                        System.out.println(q1);
+                         System.out.println(print(Q1));
 
                         break;
                     case 2:
@@ -66,17 +74,18 @@ public static final int Quantum = 3;
 
         }
 
+	/*
 	 public static void Round_Robin(ArrayList<PCB> processes) {
          int processINdex = 0;//
-      
+
      int current_time=0;
 
      Queue<PCB> readyQueue = new LinkedList<>(processes);
-    
+
      PCB process = null ;
      while (!readyQueue.isEmpty()) {
           process = readyQueue.poll();
-         
+
          if (process.getStart_Time() == -1) {
         	 process.setStart_Time(current_time);
          }
@@ -85,7 +94,7 @@ public static final int Quantum = 3;
                      current_time += Quantum;
                      //System.out.println("num of process: " +processes.size() +"\nID:"+process.getProcessID()+"\nindex:"+ processes.indexOf(process) + " is not done\n");
                     // processes.add(process);
-                     readyQueue.add(process); 
+                     readyQueue.add(process);
                  }else {
                     // if (process.getTemp_CPU_burst() <= Quantum) {
                         // System.out.println(process.getProcessID() +" is done \n");
@@ -94,68 +103,79 @@ public static final int Quantum = 3;
                          current_time += process.getCPU_burst();
                         // process.setWaiting_time(process.getTurnaround_time()-process.getCPU_burst());  //;
                          process.setCPU_burst(0);
-                         
+
                           //processes.remove(i);
                         // }
                      processCounterRR--;
                  }
- 
+
          }
-   
-         
 
-         
-         
-         
-         
-         
-         
- }
+
+ }*/
 	 
 	 
-	 /* public static void Round_Robin(ArrayList processes) {
-          int processINdex = 0;//
+	  public static void Round_Robin(Queue processes) {
           PCB process;
-      int current_time=0;
-//      while (!processes.isEmpty()){
-//          process = (PCB) processes.get(processINdex);
-//          if (process.getCPU_burst()> 3){
-//              process.setCPU_burst(process.getCPU_burst()-3);
-//              processes.add(process);
-//              processINdex++;
-//          }else {
-//              int p = process.getCPU_burst();
-//
-//              process.setCPU_burst(0);
-//              processCounterRR--;
-//              if(processes.remove(p)){
-//
-//              } }}
-          for (int i=0 ; processes.size()>i ;i++){
-             process = (PCB) processes.get(i);
+       current_time=0;
+          Queue<PCB> PQueue = new LinkedList<>(processes);
+      while (processCounterRR != 0){
+                    process =(PCB) PQueue.poll();
 
-                  if (process.getTemp_CPU_burst()> 3){
-                      process.setCPU_burst(process.getTemp_CPU_burst()-Quantum);
-                      System.out.println("num of process: " +processes.size() +"\nID:"+process.getProcessID()+"\nindex:"+ processes.indexOf(process) + " is not done\n");
-                      processes.add(process);
+          if (process.getStart_Time() == -1) {
+              process.setStart_Time(current_time);
+          }
+          if (process.getTemp_CPU_burst()> 3){
+              process.setTemp_CPU_burst((process.getTemp_CPU_burst()-Quantum));
+              // System.out.println("num of process: " +processes.size() +"\nID:"+process.getProcessID()+"\nindex:"+ processes.indexOf(process) + " is not done\n");
+              current_time += Quantum;
+              PQueue.add(process);
 
-                  }else {
-                      if (process.getTemp_CPU_burst() <= 3) {
-                          System.out.println(process.getProcessID() +" is done \n");
-                          process.setTermination_time(current_time + process.getCPU_burst());
-                          process.setTurnaround_time(current_time - process.getArrival_time());
-                          current_time += process.getCPU_burst();
-                          process.setWaiting_time(process.getTurnaround_time()-process.getCPU_burst());  //;
-                         process.setCPU_burst(0);
-                          processes.remove(i);}
-                      processCounterRR--;
+              Q1.add(process);
+
+          }else {
+              if (process.getTemp_CPU_burst() <= 3) {
+                  //  System.out.println(process.getProcessID() +" is done \n");
+                  process.setTermination_time(current_time + process.getCPU_burst());
+                  current_time += process.getTemp_CPU_burst();
+                  process.setTurnaround_time(current_time - process.getArrival_time());
+                  current_time += process.getCPU_burst();
+                  process.setWaiting_time(process.getTurnaround_time()-process.getCPU_burst());  //;
+                  process.setTemp_CPU_burst(0);
+                  if(process.getCPU_burst()<=3){
+                      Q1.add(process);// since it's the first time it enters the thing
                   }
-          } */
-	 
+                  PQueue.remove(process);
+                  processCounterRR--;
+              }
+
+
+          }}
+
+      }
 
 
 
-	
+
+
+
+
+
+
+
+public static String print(Queue<PCB> Q){
+    PCB process ;
+    int ff= Q.size();
+    String output="[ ";
+    while (!Q.isEmpty()){
+        process = Q.poll();
+        output += process.getProcessID()+ " | ";
+    }
+    output += "]";
+    return output ;
+}
+
+
 
 	 
 	 

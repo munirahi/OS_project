@@ -3,7 +3,7 @@ public class PCB {
 	 String ProcessID ;
 	   private int priority ;
 	private int arrival_time ; // not sure of the type
-	private  int CPU_burst ;
+	private final int CPU_burst ;
 	private int temp_CPU_burst;
 	private int Start_Time;
 	private int termination_time;
@@ -53,12 +53,18 @@ public class PCB {
 			return Turnaround_time;
 		}
 		public void setTurnaround_time(int turnaround_time) {
+			if (turnaround_time<0){
+				Turnaround_time = arrival_time;
+			}else
 			Turnaround_time = turnaround_time;
 		}
 		public int getWaiting_time() {
 			return Waiting_time;
 		}
 		public void setWaiting_time(int waiting_time) {
+						if(waiting_time< 0){
+							Waiting_time =0;
+						}else
 			Waiting_time = waiting_time;
 		}
 		public int getResponse_time() {
@@ -76,8 +82,8 @@ public class PCB {
 			return temp_CPU_burst;
 		}
 
-		public void setCPU_burst(int CPU_burst) {
-			this.CPU_burst = CPU_burst;
+		public void setTemp_CPU_burst(int CPU_burst) {
+			this.temp_CPU_burst = CPU_burst;
 		}
 
 		public int getArrival_time() {
@@ -93,7 +99,7 @@ public class PCB {
 					+ ", CPU_burst=" + CPU_burst + ", temp_CPU_burst=" + temp_CPU_burst + ", Start_Time=" + Start_Time
 					+ ", termination_time=" + termination_time + ", Turnaround_time=" + Turnaround_time
 					+ ", Waiting_time=" + Waiting_time + ", Response_time=" + Response_time + ", processCount="
-					+ processCount + "]";
+					+ processCount + "]\n";
 		}
 
 
