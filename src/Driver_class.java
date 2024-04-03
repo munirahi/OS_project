@@ -32,36 +32,39 @@ public static final int Quantum = 3;
                 switch (choice) {
                     case 1:
                         System.out.print("Number of processes: ");
-                        numProcesses = scanner.nextInt();
+                    numProcesses = scanner.nextInt();
 
-                        Queue<PCB> q1= new LinkedList<>();
-                       // ArrayList<PCB> q1= new ArrayList<>();
-					 ArrayList<PCB> q2= new ArrayList<>();
-                        for (int i = 0; i < numProcesses; i++) {
+                    Queue<PCB> q1 = new LinkedList<>();
+                    // ArrayList<PCB> q1= new ArrayList<>();
+                    ArrayList<PCB> q2 = new ArrayList<>();
+                    // for (int i = 0; i < numProcesses; i++) {
+                    for (pID = 1; pID <= numProcesses; pID++) {//REPORT
 
-                            System.out.print("Enter priority (1 or 2): ");
-                            int priority = scanner.nextInt();
-                            System.out.print("Enter arrival time : ");
-                            int arrival_time = scanner.nextInt();
-                            System.out.print("Enter CPU burst: ");
-                            int cpu_burst = scanner.nextInt();
-                            scanner.nextLine();
+                        System.out.print("Enter priority (1 or 2): ");
+                        int priority = scanner.nextInt();
+                        System.out.print("Enter arrival time : ");
+                        int arrival_time = scanner.nextInt();
+                        System.out.print("Enter CPU burst: ");
+                        int cpu_burst = scanner.nextInt();
+                        scanner.nextLine();
 
-                            PCB process = new PCB(priority, arrival_time, cpu_burst);
-                            if (priority == 1){
-                                q1.add(process);
-			        ComQ1.add(process);//for generate report
-                            process.setProcessID("P" + ++processCounterRR);}
-                            else
-                                q2.add(process);
-				ComQ2.add(process);//for generate report
+                        PCB process = new PCB(priority, arrival_time, cpu_burst);
+                        process.setProcessID(pID);//convert it to int report
+                        if (priority == 1) {
+                            q1.add(process);
+                            ComQ1.add(process);//for generate report
+                            // process.setProcessID("P" + ++processCounterRR);
+                        } else {
+                            q2.add(process);
+                            ComQ2.add(process);//for generate report
                         }
-                        //Q1 = Round_Robin((Queue<PCB>) q1);
-
-                        Round_Robin(q1);
-                        System.out.println(q1);
-                         System.out.println(print(Q1));
-
+                        //  }
+                    }//end for loop /report
+                    //Q1 = Round_Robin((Queue<PCB>) q1);
+                    Round_Robin(q1);
+                    System.out.println(q1);
+                    System.out.println(print(Q1));
+                    
                         break;
                     case 2:
   int count=0; 
