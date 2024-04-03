@@ -18,8 +18,9 @@ public static final int Quantum = 3;
         public static void main (String[]args){
             // TODO Auto-generated method stub
             Scanner scanner = new Scanner(System.in);
-            int numProcesses = 0;
-            int choice;
+           int choice;
+        int numProcesses = 0;
+        int pID;
 
             do {
                 System.out.println("1. Enter process’ information:");
