@@ -101,6 +101,9 @@ public class PCB {
 					+ ", Waiting_time=" + Waiting_time + ", Response_time=" + Response_time + ", processCount="
 					+ processCount + "]\n";
 		}
+	public int getPriority() {
+        return priority;
+    }
 
 
 	}
