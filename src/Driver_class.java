@@ -186,80 +186,41 @@ public static final int Quantum = 3;
 
         }
 
-	/*
-	 public static void Round_Robin(ArrayList<PCB> processes) {
-         int processINdex = 0;//
-
-     int current_time=0;
-
-     Queue<PCB> readyQueue = new LinkedList<>(processes);
-
-     PCB process = null ;
-     while (!readyQueue.isEmpty()) {
-          process = readyQueue.poll();
-
-         if (process.getStart_Time() == -1) {
-        	 process.setStart_Time(current_time);
-         }
-                 if (process.getCPU_burst()> Quantum){
-                     process.setCPU_burst(process.getCPU_burst()-Quantum);
-                     current_time += Quantum;
-                     //System.out.println("num of process: " +processes.size() +"\nID:"+process.getProcessID()+"\nindex:"+ processes.indexOf(process) + " is not done\n");
-                    // processes.add(process);
-                     readyQueue.add(process);
-                 }else {
-                    // if (process.getTemp_CPU_burst() <= Quantum) {
-                        // System.out.println(process.getProcessID() +" is done \n");
-                         process.setTermination_time(current_time + process.getCPU_burst());
-                        // process.setTurnaround_time(current_time - process.getArrival_time());
-                         current_time += process.getCPU_burst();
-                        // process.setWaiting_time(process.getTurnaround_time()-process.getCPU_burst());  //;
-                         process.setCPU_burst(0);
-
-                          //processes.remove(i);
-                        // }
-                     processCounterRR--;
-                 }
-
-         }
-
-
- }*/
 	 
 	 
 	  public static void Round_Robin(Queue processes) {
           PCB process;
-       current_time=0;
-          Queue<PCB> PQueue = new LinkedList<>(processes);
-      while (processCounterRR != 0){
-                    process =(PCB) PQueue.poll();
+          current_time=0;
+          
+          Queue<PCB> readyQueue = new LinkedList<>(processes);
+          
+      while (!readyQueue.isEmpty()){
+                    process =(PCB) readyQueue.poll();
 
           if (process.getStart_Time() == -1) {
               process.setStart_Time(current_time);
           }
           if (process.getTemp_CPU_burst()> 3){
               process.setTemp_CPU_burst((process.getTemp_CPU_burst()-Quantum));
-              // System.out.println("num of process: " +processes.size() +"\nID:"+process.getProcessID()+"\nindex:"+ processes.indexOf(process) + " is not done\n");
               current_time += Quantum;
-              PQueue.add(process);
+              readyQueue.add(process);
 
               Q1.add(process);
 
           }else {
-              if (process.getTemp_CPU_burst() <= 3) {
-                  //  System.out.println(process.getProcessID() +" is done \n");
-                  process.setTermination_time(current_time + process.getCPU_burst());
+              
+                  process.setTermination_time(current_time + process.getTemp_CPU_burst());
                   current_time += process.getTemp_CPU_burst();
                   process.setTurnaround_time(current_time - process.getArrival_time());
-                  current_time += process.getCPU_burst();
+                 
                   process.setWaiting_time(process.getTurnaround_time()-process.getCPU_burst());  //;
                   process.setTemp_CPU_burst(0);
                   if(process.getCPU_burst()<=3){
-                      Q1.add(process);// since it's the first time it enters the thing
+                      Q1.add(process);
                   }
-                  PQueue.remove(process);
+                  readyQueue.remove(process);
                   processCounterRR--;
-              }
+              
 
 
           }}
@@ -275,17 +236,7 @@ public static final int Quantum = 3;
 
 
 
-public static String print(Queue<PCB> Q){
-    PCB process ;
-    int ff= Q.size();
-    String output="[ ";
-    while (!Q.isEmpty()){
-        process = Q.poll();
-        output += process.getProcessID()+ " | ";
-    }
-    output += "]";
-    return output ;
-}
+
 
 public static void printProcessDetails(PCB process, FileWriter fileWriter) throws IOException {
 
