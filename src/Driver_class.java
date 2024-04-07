@@ -1,9 +1,11 @@
+
 import java.util.ArrayList;
 import java.util.LinkedList;
 import java.util.Queue;
 import java.util.Scanner;
 import java.io.FileWriter;
 import java.io.IOException;
+import java.util.Collections;
 
 public class Driver_class {
     public static Queue<PCB> Q1 = new LinkedList<>();
@@ -14,7 +16,7 @@ public static final int Quantum = 3;
     public static ArrayList<PCB> readyQ ;
  public static Queue<PCB> ComQ1 = new LinkedList<>();
     public static Queue<PCB> ComQ2 = new LinkedList<>();
-	
+    
         public static void main (String[]args){
             // TODO Auto-generated method stub
             Scanner scanner = new Scanner(System.in);
@@ -23,7 +25,7 @@ public static final int Quantum = 3;
         int pID;
 
             do {
-                System.out.println("1. Enter process’ information:");
+                System.out.println("1. Enter process' information:");
                 System.out.println("2. Report detailed information about each process and different scheduling criteria.");
                 System.out.println("3. Exit the program.");
 
@@ -41,11 +43,11 @@ public static final int Quantum = 3;
                     // for (int i = 0; i < numProcesses; i++) {
                     for (pID = 1; pID <= numProcesses; pID++) {//REPORT
 
-                        System.out.print("Enter priority (1 or 2): ");
+                        System.out.print("Enter priority (1 or 2) of P" + pID +": ");
                         int priority = scanner.nextInt();
-                        System.out.print("Enter arrival time : ");
+                        System.out.print("Enter arrival time of P" + pID +": ");
                         int arrival_time = scanner.nextInt();
-                        System.out.print("Enter CPU burst: ");
+                        System.out.print("Enter CPU burst of P" + pID +": ");
                         int cpu_burst = scanner.nextInt();
                         scanner.nextLine();
 
@@ -63,12 +65,14 @@ public static final int Quantum = 3;
                     }//end for loop /report
                     //Q1 = Round_Robin((Queue<PCB>) q1);
                     Round_Robin(q1);
+                    SJF(q2);
                     System.out.println(q1);
-                    System.out.println(print(Q1));
+                    System.out.println((Q1).toString());
                     
                         break;
+
                     case 2:
-  int count=0; 
+              int count=0; 
               Queue<PCB> p = new LinkedList<>();
               Queue<PCB> p1 = new LinkedList<>();
               Queue<PCB> p2 = new LinkedList<>();
@@ -186,9 +190,9 @@ public static final int Quantum = 3;
 
         }
 
-	 
-	 
-	  public static void Round_Robin(Queue processes) {
+     
+     
+      public static void Round_Robin(Queue processes) {
           PCB process;
           current_time=0;
           
@@ -226,6 +230,43 @@ public static final int Quantum = 3;
           }}
 
       }
+
+
+
+      public static void SJF(ArrayList processes){
+        int current_time=0;
+        Collections.sort(processes);
+        int turnaround_time=0;
+        int waiting_time=0;
+        int averageTurnAround =0;
+        int averageWaiting =0;
+        ArrayList<PCB> allProcess = new ArrayList<>();
+        for (int i=0 ; processes.size()>i ;i++){
+            PCB process = (PCB)processes.get(i);
+            System.out.println("CPU burst of P" + (i+1) +": "  + process.getCPU_burst());
+            System.out.println("Arrival time of P" + (i+1) +": " +process.getArrival_time());
+            //turnaround
+            process.setTermination_time(current_time + process.getCPU_burst());
+            process.setTurnaround_time(process.getTermination_time() - process.getArrival_time());
+            System.out.println("Turnaround time of P"+ (i+1) +": " +process.getTurnaround_time());
+            current_time += process.getCPU_burst();
+            //waiting time
+            process.setWaiting_time(process.getTurnaround_time() - process.getCPU_burst());
+            System.out.println("waiting time of P"+ (i+1) +": " + process.getWaiting_time());
+            allProcess.add(process);
+        }
+         //average turnaround time
+        //  for(int i=0 ; allProcess.size()>i ;i++){
+        //     PCB process = (PCB)allProcess.get(i);
+        //     turnaround_time+=process.getTurnaround_time();
+        //     averageTurnAround = turnaround_time/allProcess.size();
+        //     waiting_time += process.getWaiting_time();
+        //     averageWaiting = waiting_time/allProcess.size();
+        //  }
+        // System.out.println("Average turnaround time: "+ averageTurnAround);
+        // System.out.println("Average waiting time: "+ averageWaiting);
+    }
+
 
 
 
@@ -273,8 +314,8 @@ public static void printProcessDetails(PCB process, FileWriter fileWriter) throw
 
     }
 
-	 
-	 
+     
+     
 
 
 }
