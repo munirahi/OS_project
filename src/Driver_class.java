@@ -366,36 +366,35 @@ public static final int Quantum = 3;
 
 public static void printProcessDetails(PCB process, FileWriter fileWriter) throws IOException {
 
-        fileWriter.write("Process ID: " + process.getProcessID() + "\n");
-        System.out.print("Process ID: " + process.getProcessID() + "\n");
+       fileWriter.write("Process ID: " + process.getProcessID());
+        System.out.print("Process ID: " + process.getProcessID());
 
-        fileWriter.write("Priority: " + process.getPriority() + "\n");
-        System.out.print("Priority: " + process.getPriority() + "\n");
+        fileWriter.write(" Priority: " + process.getPriority());
+        System.out.print(" Priority: " + process.getPriority());
 
-        fileWriter.write("Arrival Time: " + process.getArrival_time() + "\n");
-        System.out.print("Arrival Time: " + process.getArrival_time() + "\n");
+        fileWriter.write(" Arrival Time: " + process.getArrival_time());
+        System.out.print(" Arrival Time: " + process.getArrival_time());
 
-        fileWriter.write("CPU Burst Time: " + process.getCPU_burst() + "\n");
-        System.out.print("CPU Burst Time: " + process.getCPU_burst() + "\n");
+        fileWriter.write(" CPU Burst Time: " + process.getCPU_burst());
+        System.out.print(" CPU Burst Time: " + process.getCPU_burst());
 
-        fileWriter.write("Start Time: " + process.getStart_Time() + "\n");
-        System.out.print("Start Time: " + process.getStart_Time() + "\n");
+        fileWriter.write(" Start Time: " + process.getStart_Time());
+        System.out.print(" Start Time: " + process.getStart_Time());
 
-        fileWriter.write("Termination Time: " + (process.getTermination_time()) + "\n");
-        System.out.print("Termination Time: " + (process.getTermination_time()) + "\n");
+        fileWriter.write(" Termination Time: " + (process.getTermination_time()));
+        System.out.print(" Termination Time: " + (process.getTermination_time()));
 
-        fileWriter.write("Turnaround Time: " + (process.getTurnaround_time()) + "\n");
-        System.out.print("Turnaround Time: " + (process.getTurnaround_time()) + "\n");
-       
+        fileWriter.write(" Turnaround Time: " + (process.getTurnaround_time()));
+        System.out.print(" Turnaround Time: " + (process.getTurnaround_time()));
 
-        fileWriter.write("Waiting Time: " + (process.getWaiting_time()) + "\n");
-        System.out.print("Waiting Time: " + (process.getWaiting_time())+"\n");
+        fileWriter.write(" Waiting Time: " + (process.getWaiting_time()));
+        System.out.print(" Waiting Time: " + (process.getWaiting_time()));
 
-        fileWriter.write("Response Time: " + (process.getResponse_time()) + "\n");
-        System.out.print("Response Time: " + (process.getResponse_time()) + "\n");
+        fileWriter.write(" Response Time: " + (process.getResponse_time()));
+        System.out.print(" Response Time: " + (process.getResponse_time()));
 
-     
-      //  fileWriter.close();
+        fileWriter.write("]");
+        System.out.print("]");
 
     }
 
