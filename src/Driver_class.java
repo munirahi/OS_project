@@ -71,8 +71,205 @@ public static final int Quantum = 3;
                     
                         break;
 
-                    case 2:
-                   
+               
+                         case 2:
+                    //int count=0; 
+                    Queue<PCB> p = new LinkedList<>();
+                    Queue<PCB> A = new LinkedList<>();
+                    Queue<PCB> A1 = new LinkedList<>();
+
+                    if (q1.isEmpty() && q2.isEmpty()) {
+                        System.out.print("Please Enter Process first");
+                    } else {
+                        try {
+
+                            PCB process;
+                            PCB process1;
+
+                            FileWriter fileWriter = new FileWriter("Report.txt");
+                            fileWriter.write("Schedule Order: [");
+                            System.out.print("Schedule Order: [");
+                            while (!q1.isEmpty()) {
+                                process = q1.poll();
+                                A1.add(process);
+                                if (!q1.isEmpty()) {
+                                    process1 = q1.poll();
+                                    A1.add(process1);
+
+                                    if (process.getArrival_time() < process1.getArrival_time()) {
+                                        if (process.getCPU_burst() <= 3) {
+                                            System.out.print("P" + process.getProcessID() + " | ");
+                                            fileWriter.write("P" + process.getProcessID() + " | ");
+                                            process.setCPU_burst(0);
+                                            q1.remove(process);
+
+                                        } else if (process.getCPU_burst() > 3) {
+                                            System.out.print("P" + process.getProcessID() + " | ");
+                                            fileWriter.write("P" + process.getProcessID() + " | ");
+                                            int a = process.getCPU_burst();
+                                            process.setCPU_burst(a - 3);
+                                            A1.add(process);
+                                            continue;
+                                        }
+                                        if (process.getCPU_burst() <= 0) {
+                                            q1.remove(process);
+                                        }
+
+                                    } else {
+                                        if (process1.getCPU_burst() <= 3) {
+                                            System.out.print("P" + process1.getProcessID() + " | ");
+                                            fileWriter.write("P" + process1.getProcessID() + " | ");
+                                            process1.setCPU_burst(0);
+                                            q1.remove(process1);
+                                            A1.add(process);
+
+                                        } else if (process1.getCPU_burst() > 3) {
+                                            System.out.print("P" + process1.getProcessID() + " | ");
+                                            fileWriter.write("P" + process1.getProcessID() + " | ");
+                                            int a = process1.getCPU_burst();
+                                            process1.setCPU_burst(a - 3);
+                                            A1.add(process1);
+                                            q1.add(process);
+                                            continue;
+                                        }
+                                        if (process1.getCPU_burst() <= 0) {
+                                            q1.remove(process1);
+                                            A1.add(process);
+                                        }
+                                    }
+                                } else {
+                                    System.out.print("P" + process.getProcessID() + " | ");
+                                    fileWriter.write("P" + process.getProcessID() + " | ");
+                                    A1.add(process);
+                                    q1.remove(process);
+                                }
+                            }
+                            while (!q2.isEmpty()) {
+                                process = q2.poll();
+                                q2.remove(process);
+                                if (!q2.isEmpty()) {
+
+                                    process1 = q2.poll();
+                                    q2.remove(process1);
+
+                                    if (process.getArrival_time() < process1.getArrival_time()) {
+
+                                        System.out.print("P" + process.getProcessID() + " | ");//
+                                        fileWriter.write("P" + process.getProcessID() + " | ");//
+                                        A.add(process);
+
+                                    } else {
+                                        System.out.print("P" + process1.getProcessID() + " | ");//
+                                        fileWriter.write("P" + process1.getProcessID() + " | ");//  
+                                        A.add(process);
+
+                                    }
+
+                                } else {
+                                    System.out.print("P" + process.getProcessID() + " | ");//
+                                    fileWriter.write("P" + process.getProcessID() + " | ");//
+                                    A.add(process);
+
+                                    break;
+                                }
+                            }
+
+                            fileWriter.write("]\n");
+                            System.out.print("]\n");
+
+                            //Print detailed information for each process
+                            while (!A1.isEmpty()) {
+                                int time = 0;
+                                int t=0;
+                                int ter=0;
+                                int st=0;
+                                int c=0;
+                                process = A1.poll();
+                                ComQ1.add(process);
+                                System.out.println("\n Process Information:\n");
+                                fileWriter.write("\n Process Information:\n");
+                                time += process.getCPU_burst();
+                                process.setStart_Time(time);
+                                 t += process.getArrival_time();
+                                process.setTermination_time(time + t);
+                                ter += process.getTermination_time();
+                                 st += process.getStart_Time();
+                                process.setResponse_time(st - t);
+                                 c += process.getCPU_burst();
+                                process.setWaiting_time(ter - c);
+                                process.setTurnaround_time(ter - t);
+                                printProcessDetails(process, fileWriter);
+
+                            }
+                            //System.out.println("Process Information:\n");
+                            // fileWriter.write("Process Information:\n");
+                            while (!A.isEmpty()) {
+                                int time = 0;
+                                int t=0;
+                                int ter=0;
+                                int st=0;
+                                int c=0;
+                                process = A.poll();
+                                ComQ2.add(process);
+                                System.out.println("\n Process Information:\n");
+                                fileWriter.write("\n Process Information:\n");
+                                time += process.getCPU_burst();
+                                process.setStart_Time(time);
+                                 t += process.getArrival_time();
+                                process.setTermination_time(time + t);
+                                 ter += process.getTermination_time();
+                                 st += process.getStart_Time();
+                                process.setResponse_time(st - t);
+                                 c += process.getCPU_burst();
+                                process.setTurnaround_time(ter - t);
+                                process.setWaiting_time(ter - c);
+                                printProcessDetails(process, fileWriter);
+                            }
+
+                            // Calculate and print average turnaround time, waiting time, and response time
+                            double totalTurnaroundTime1 = 0;
+                            double totalWaitingTime1 = 0;
+                            double totalResponseTime1 = 0;
+                            double totalTurnaroundTime2 = 0;
+                            double totalWaitingTime2 = 0;
+                            double totalResponseTime2 = 0;
+
+                            while (!ComQ1.isEmpty()) {
+                                process = ComQ1.poll();
+                                p.add(process);
+                                totalTurnaroundTime1 += process.getTurnaround_time();
+                                totalWaitingTime1 += process.getWaiting_time();
+                                totalResponseTime1 += process.getResponse_time();
+                            }
+                            while (!ComQ2.isEmpty()) {
+                                process = ComQ2.poll();
+                                p.add(process);
+                                totalTurnaroundTime2 += process.getTurnaround_time();
+                                totalWaitingTime2 += process.getWaiting_time();
+                                totalResponseTime2 += process.getResponse_time();
+                            }
+                            double totalTurnaroundTime = totalTurnaroundTime2 + totalTurnaroundTime1;
+                            double totalWaitingTime = totalWaitingTime2 + totalWaitingTime1;
+                            double totalResponseTime = totalResponseTime2 + totalResponseTime1;
+
+                            double averageTurnaroundTime = totalTurnaroundTime / numProcesses;
+                            double averageWaitingTime = totalWaitingTime / numProcesses;
+                            double averageResponseTime = totalResponseTime / numProcesses;
+
+                            fileWriter.write("Average Turnaround Time: " + averageTurnaroundTime + "\n");
+                            System.out.print("Average Turnaround Time: " + averageTurnaroundTime + "\n");
+                            fileWriter.write("Average Waiting Time: " + averageWaitingTime + "\n");
+                            System.out.print("Average Waiting Time: " + averageWaitingTime + "\n");
+                            fileWriter.write("Average Response Time: " + averageResponseTime + "\n");
+                            System.out.print("Average Response Time: " + averageResponseTime + "\n");
+                            fileWriter.close();
+                        } catch (IOException e) {
+                            System.out.println("An error occurred while writing to the file.");
+                        }
+                    }
+
+                    
+
 
                     break;
 
