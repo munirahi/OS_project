@@ -73,7 +73,7 @@ public static final int Quantum = 3;
 
                
                          case 2:
-                    //int count=0; 
+                       //int count=0; 
                     Queue<PCB> p = new LinkedList<>();
                     Queue<PCB> A = new LinkedList<>();
                     Queue<PCB> A1 = new LinkedList<>();
@@ -102,6 +102,7 @@ public static final int Quantum = 3;
                                             fileWriter.write("P" + process.getProcessID() + " | ");
                                             process.setCPU_burst(0);
                                             q1.remove(process);
+                                            q1.add(process1);
 
                                         } else if (process.getCPU_burst() > 3) {
                                             System.out.print("P" + process.getProcessID() + " | ");
@@ -109,10 +110,14 @@ public static final int Quantum = 3;
                                             int a = process.getCPU_burst();
                                             process.setCPU_burst(a - 3);
                                             A1.add(process);
+                                            q1.add(process1);
+
                                             continue;
                                         }
                                         if (process.getCPU_burst() <= 0) {
                                             q1.remove(process);
+                                            q1.add(process1);
+
                                         }
 
                                     } else {
@@ -122,6 +127,7 @@ public static final int Quantum = 3;
                                             process1.setCPU_burst(0);
                                             q1.remove(process1);
                                             A1.add(process);
+                                            q1.add(process);
 
                                         } else if (process1.getCPU_burst() > 3) {
                                             System.out.print("P" + process1.getProcessID() + " | ");
@@ -130,11 +136,14 @@ public static final int Quantum = 3;
                                             process1.setCPU_burst(a - 3);
                                             A1.add(process1);
                                             q1.add(process);
+                                            q1.add(process);
+
                                             continue;
                                         }
                                         if (process1.getCPU_burst() <= 0) {
                                             q1.remove(process1);
                                             A1.add(process);
+
                                         }
                                     }
                                 } else {
@@ -142,6 +151,7 @@ public static final int Quantum = 3;
                                     fileWriter.write("P" + process.getProcessID() + " | ");
                                     A1.add(process);
                                     q1.remove(process);
+
                                 }
                             }
                             while (!q2.isEmpty()) {
@@ -157,11 +167,14 @@ public static final int Quantum = 3;
                                         System.out.print("P" + process.getProcessID() + " | ");//
                                         fileWriter.write("P" + process.getProcessID() + " | ");//
                                         A.add(process);
+                                        q2.add(process1);
 
                                     } else {
                                         System.out.print("P" + process1.getProcessID() + " | ");//
                                         fileWriter.write("P" + process1.getProcessID() + " | ");//  
                                         A.add(process);
+                                                                                q2.add(process);
+
 
                                     }
 
@@ -169,6 +182,7 @@ public static final int Quantum = 3;
                                     System.out.print("P" + process.getProcessID() + " | ");//
                                     fileWriter.write("P" + process.getProcessID() + " | ");//
                                     A.add(process);
+
 
                                     break;
                                 }
@@ -268,8 +282,7 @@ public static final int Quantum = 3;
                         }
                     }
 
-                    
-
+              
 
                     break;
 
