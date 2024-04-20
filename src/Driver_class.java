@@ -23,6 +23,10 @@ public static final int Quantum = 3;
            int choice;
         int numProcesses = 0;
         int pID;
+                            Queue<PCB> q1 = new LinkedList<>();
+                                                ArrayList<PCB> q2 = new ArrayList<>();
+
+
 
             do {
                 System.out.println("1. Enter process' information:");
@@ -37,9 +41,7 @@ public static final int Quantum = 3;
                         System.out.print("Number of processes: ");
                     numProcesses = scanner.nextInt();
 
-                    Queue<PCB> q1 = new LinkedList<>();
                     // ArrayList<PCB> q1= new ArrayList<>();
-                    ArrayList<PCB> q2 = new ArrayList<>();
                     // for (int i = 0; i < numProcesses; i++) {
                     for (pID = 1; pID <= numProcesses; pID++) {//REPORT
 
@@ -100,7 +102,7 @@ public static final int Quantum = 3;
                                         if (process.getCPU_burst() <= 3) {
                                             System.out.print("P" + process.getProcessID() + " | ");
                                             fileWriter.write("P" + process.getProcessID() + " | ");
-                                            process.setCPU_burst(0);
+                                            process.setTemp_CPU_burst(0);
                                             q1.remove(process);
                                             q1.add(process1);
 
@@ -108,7 +110,7 @@ public static final int Quantum = 3;
                                             System.out.print("P" + process.getProcessID() + " | ");
                                             fileWriter.write("P" + process.getProcessID() + " | ");
                                             int a = process.getCPU_burst();
-                                            process.setCPU_burst(a - 3);
+                                            process.setTemp_CPU_burst(a - 3);
                                             A1.add(process);
                                             q1.add(process1);
 
@@ -124,7 +126,7 @@ public static final int Quantum = 3;
                                         if (process1.getCPU_burst() <= 3) {
                                             System.out.print("P" + process1.getProcessID() + " | ");
                                             fileWriter.write("P" + process1.getProcessID() + " | ");
-                                            process1.setCPU_burst(0);
+                                            process1.setTemp_CPU_burst(0);
                                             q1.remove(process1);
                                             A1.add(process);
                                             q1.add(process);
@@ -133,7 +135,7 @@ public static final int Quantum = 3;
                                             System.out.print("P" + process1.getProcessID() + " | ");
                                             fileWriter.write("P" + process1.getProcessID() + " | ");
                                             int a = process1.getCPU_burst();
-                                            process1.setCPU_burst(a - 3);
+                                            process1.setTemp_CPU_burst(a - 3);
                                             A1.add(process1);
                                             q1.add(process);
                                             q1.add(process);
@@ -154,13 +156,15 @@ public static final int Quantum = 3;
 
                                 }
                             }
-                            while (!q2.isEmpty()) {
-                                process = q2.poll();
-                                q2.remove(process);
-                                if (!q2.isEmpty()) {
+                           while (!q2.isEmpty()) {
+    int i = 0;
+    process = q2.get(i);
+    q2.remove(i);
 
-                                    process1 = q2.poll();
-                                    q2.remove(process1);
+                               if (i!=q2.size()) {
+
+                                process1 = q2.get(i);
+                                   q2.remove(i);
 
                                     if (process.getArrival_time() < process1.getArrival_time()) {
 
@@ -186,6 +190,8 @@ public static final int Quantum = 3;
 
                                     break;
                                 }
+                                if(i==q2.size()-1)
+                                    break;
                             }
 
                             fileWriter.write("]\n");
