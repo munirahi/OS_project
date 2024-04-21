@@ -1,16 +1,6 @@
 
-import java.util.ArrayList;
-import java.util.LinkedList;
-import java.util.Queue;
-import java.util.Scanner;
-import java.io.FileWriter;
-import java.io.IOException;
-import java.util.Collections;
-
-public class Driver_class {
-
     public static Queue<PCB> Q1 = new LinkedList<>();
-    public static ArrayList<PCB> Q2;
+    public static ArrayList<PCB> Q2= new ArrayList<>();
     public static int processCounterRR;
     public static int current_time;
     public static final int Quantum = 3;
@@ -75,39 +65,36 @@ public class Driver_class {
 //int count=0;
                     Queue<PCB> A = new LinkedList<>();
                     Queue<PCB> A1 = new LinkedList<>();
-
-                    if (q1.isEmpty() && q2.isEmpty()) {
+                  
+                    
+                    if (Q1.isEmpty() && Q2.isEmpty()) {
                         System.out.print("Please Enter Process first");
                     } else {
                         try {
-
+                   // A1=Q1;
                             PCB process;
-                            PCB process1;
 
                             FileWriter fileWriter = new FileWriter("Report.txt");
                             fileWriter.write("Schedule Order: [");
                             System.out.print("Schedule Order: [");
 
-                            while (!q1.isEmpty()) {
-                                Round_Robin(q1);
-                                process = q1.poll();
+                            while (!Q1.isEmpty()) {
+                                process = Q1.poll();
                                 A1.add(process);
-
                                 System.out.print("P" + process.getProcessID() + " | ");
                                 fileWriter.write("P" + process.getProcessID() + " | ");
 
                             }
-
-                            for (int i = 0; i < q2.size(); i++) {
-                                SJF(q2);
+                            if( !Q2.isEmpty()){
+                            for (int i = 0; i < Q2.size(); i++) {
+                               // SJF(q2);
                                 //SJFinfo( q2);
-                                process = q2.get(i);
-                                A.add(process);
+                                process = Q2.get(i);
                                 System.out.print("P" + process.getProcessID() + " | ");//
                                 fileWriter.write("P" + process.getProcessID() + " | ");//
 
                             }
-
+                            }
                             fileWriter.write("]\n");
                             System.out.print("]\n");
 
@@ -115,31 +102,26 @@ public class Driver_class {
                             System.out.println("\n Process Information:\n");
                             fileWriter.write("\n Process Information:\n");
                             while (!A1.isEmpty()) {
-                                Round_Robin(A1);
+                               // Round_Robin(A1);
                                 //SJF(q2);
                                 process = A1.poll();
-                                //A.add(process);
-                                System.out.print("P" + process.toString() + "\n");
-                                fileWriter.write("P" + process.toString());
+                                A.add(process);
 
-                            }
-                                // Round_Robin(q1);
-                                SJF(q2);
                                 //A.add(process);
+                           
+                                printProcessDetails( process,  fileWriter);
+                            }
                                
-                                ArrayList<PCB> allProcess = new ArrayList<>();
-                                for (int i = 0; q2.size() > i; i++) {
-                                    process = (PCB) q2.get(i);
+                                for (int i = 0; Q2.size() > i; i++) {
+                                    process = (PCB) Q2.get(i);
                                     process.setStart_Time(current_time);
                                     process.setTermination_time(current_time + process.getCPU_burst());
                                     process.setTurnaround_time(process.getTermination_time() - process.getArrival_time());
                                     process.setResponse_time(process.getStart_Time()-process.getArrival_time());
                                     current_time += process.getCPU_burst();                                   
                                     process.setWaiting_time(process.getTurnaround_time() - process.getCPU_burst());
-                                   allProcess.add(process);      
                                    
-                                System.out.print("P" + process.toString() + "\n");
-                                fileWriter.write("P" + process.toString());
+                                printProcessDetails( process,  fileWriter);
                                 
 
                             }
@@ -153,8 +135,6 @@ public class Driver_class {
                             double totalResponseTime2 = 0;
 
                             while (!A.isEmpty()) {
-                                Round_Robin(q1);
-
                                 process = A.poll();
 
                                 totalTurnaroundTime1 += process.getTurnaround_time();
@@ -165,9 +145,8 @@ public class Driver_class {
                                 numProcesses += i;
 
                             }
-                            for (int i = 0; i < q2.size(); i++) {
-                                SJF(q2);
-                                process = q2.get(i);
+                            for (int i = 0; i < Q2.size(); i++) {
+                                process = Q2.get(i);
                                 totalTurnaroundTime2 += process.getTurnaround_time();
                                 totalWaitingTime2 += process.getWaiting_time();
                                 totalResponseTime2 += process.getResponse_time();
@@ -181,8 +160,8 @@ public class Driver_class {
                             double averageWaitingTime = totalWaitingTime / numProcesses;
                             double averageResponseTime = totalResponseTime / numProcesses;
 
-                            fileWriter.write("Average Turnaround Time: " + averageTurnaroundTime + "\n");
-                            System.out.print("Average Turnaround Time: " + averageTurnaroundTime + "\n");
+                            fileWriter.write("\nAverage Turnaround Time: " + averageTurnaroundTime + "\n");
+                            System.out.print("\nAverage Turnaround Time: " + averageTurnaroundTime + "\n");
                             fileWriter.write("Average Waiting Time: " + averageWaitingTime + "\n");
                             System.out.print("Average Waiting Time: " + averageWaitingTime + "\n");
                             fileWriter.write("Average Response Time: " + averageResponseTime + "\n");
@@ -245,15 +224,29 @@ public class Driver_class {
 
     }
 
-    public static void SJF(ArrayList processes) {
-        int current_time = 0;
+     public static void SJF(ArrayList processes){
+        int current_time=0;
         Collections.sort(processes);
-        int turnaround_time = 0;
-        int waiting_time = 0;
-        int averageTurnAround = 0;
-        int averageWaiting = 0;
-
-        //average turnaround time
+        int turnaround_time=0;
+        int waiting_time=0;
+        int averageTurnAround =0;
+        int averageWaiting =0;
+        ArrayList<PCB> allProcess = new ArrayList<>();
+        for (int i=0 ; processes.size()>i ;i++){
+            PCB process = (PCB)processes.get(i);
+            System.out.println("CPU burst of P" + (i+1) +": "  + process.getCPU_burst());
+            System.out.println("Arrival time of P" + (i+1) +": " +process.getArrival_time());
+            //turnaround
+            process.setTermination_time(current_time + process.getCPU_burst());
+            process.setTurnaround_time(process.getTermination_time() - process.getArrival_time());
+            System.out.println("Turnaround time of P"+ (i+1) +": " +process.getTurnaround_time());
+            current_time += process.getCPU_burst();
+            //waiting time
+            process.setWaiting_time(process.getTurnaround_time() - process.getCPU_burst());
+            System.out.println("waiting time of P"+ (i+1) +": " + process.getWaiting_time());
+            allProcess.add(process);
+        }
+         //average turnaround time
         //  for(int i=0 ; allProcess.size()>i ;i++){
         //     PCB process = (PCB)allProcess.get(i);
         //     turnaround_time+=process.getTurnaround_time();
@@ -265,51 +258,32 @@ public class Driver_class {
         // System.out.println("Average waiting time: "+ averageWaiting);
     }
 
-    public static void SJFinfo(ArrayList q2) {
-        SJF(q2);
-        ArrayList<PCB> allProcess = new ArrayList<>();
-        for (int i = 0; q2.size() > i; i++) {
-            PCB process = (PCB) q2.get(i);
-            System.out.println("CPU burst of P" + (i + 1) + ": " + process.getCPU_burst());
-
-            System.out.println("Arrival time of P" + (i + 1) + ": " + process.getArrival_time());
-            //turnaround
-            process.setTermination_time(current_time + process.getCPU_burst());
-            process.setTurnaround_time(process.getTermination_time() - process.getArrival_time());
-            System.out.println("Turnaround time of P" + (i + 1) + ": " + process.getTurnaround_time());
-            current_time += process.getCPU_burst();
-            //waiting time
-            process.setWaiting_time(process.getTurnaround_time() - process.getCPU_burst());
-            System.out.println("waiting time of P" + (i + 1) + ": " + process.getWaiting_time());
-            allProcess.add(process);
-        }
-    }
 
     public static void printProcessDetails(PCB process, FileWriter fileWriter) throws IOException {
 
-        fileWriter.write("Process ID: " + process.getProcessID());
-        System.out.print("Process ID: " + process.getProcessID());
+        fileWriter.write("\nProcess ID: " + process.getProcessID()+" | ");
+        System.out.print("\nProcess ID: " + process.getProcessID()+" | ");
 
-        fileWriter.write(" Priority: " + process.getPriority());
-        System.out.print(" Priority: " + process.getPriority());
+        fileWriter.write(" Priority: " + process.getPriority()+" | ");
+        System.out.print(" Priority: " + process.getPriority()+" | ");
 
-        fileWriter.write(" Arrival Time: " + process.getArrival_time());
-        System.out.print(" Arrival Time: " + process.getArrival_time());
+        fileWriter.write(" Arrival Time: " + process.getArrival_time()+" | ");
+        System.out.print(" Arrival Time: " + process.getArrival_time()+" | ");
 
-        fileWriter.write(" CPU Burst Time: " + process.getCPU_burst());
-        System.out.print(" CPU Burst Time: " + process.getCPU_burst());
+        fileWriter.write(" CPU Burst Time: " + process.getCPU_burst()+" | ");
+        System.out.print(" CPU Burst Time: " + process.getCPU_burst()+" | ");
 
-        fileWriter.write(" Start Time: " + process.getStart_Time());
-        System.out.print(" Start Time: " + process.getStart_Time());
+        fileWriter.write(" Start Time: " + process.getStart_Time()+" | ");
+        System.out.print(" Start Time: " + process.getStart_Time()+" | ");
 
-        fileWriter.write(" Termination Time: " + (process.getTermination_time()));
-        System.out.print(" Termination Time: " + (process.getTermination_time()));
+        fileWriter.write(" Termination Time: " + (process.getTermination_time())+" | ");
+        System.out.print(" Termination Time: " + (process.getTermination_time())+" | ");
 
-        fileWriter.write(" Turnaround Time: " + (process.getTurnaround_time()));
-        System.out.print(" Turnaround Time: " + (process.getTurnaround_time()));
+        fileWriter.write(" Turnaround Time: " + (process.getTurnaround_time())+" | ");
+        System.out.print(" Turnaround Time: " + (process.getTurnaround_time())+" | ");
 
-        fileWriter.write(" Waiting Time: " + (process.getWaiting_time()));
-        System.out.print(" Waiting Time: " + (process.getWaiting_time()));
+        fileWriter.write(" Waiting Time: " + (process.getWaiting_time())+" | ");
+        System.out.print(" Waiting Time: " + (process.getWaiting_time())+" | ");
 
         fileWriter.write(" Response Time: " + (process.getResponse_time()));
         System.out.print(" Response Time: " + (process.getResponse_time()));
@@ -320,7 +294,6 @@ public class Driver_class {
     }
 
 }
-
 
 
 /*
