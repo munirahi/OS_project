@@ -224,38 +224,24 @@
 
     }
 
-     public static void SJF(ArrayList processes){
-        int current_time=0;
+    public static void SJF(ArrayList processes){
+        int current_time= 0; //will be updated later
         Collections.sort(processes);
-        int turnaround_time=0;
-        int waiting_time=0;
-        int averageTurnAround =0;
-        int averageWaiting =0;
-        ArrayList<PCB> allProcess = new ArrayList<>();
+        
         for (int i=0 ; processes.size()>i ;i++){
             PCB process = (PCB)processes.get(i);
-            System.out.println("CPU burst of P" + (i+1) +": "  + process.getCPU_burst());
-            System.out.println("Arrival time of P" + (i+1) +": " +process.getArrival_time());
+           
             //turnaround
             process.setTermination_time(current_time + process.getCPU_burst());
             process.setTurnaround_time(process.getTermination_time() - process.getArrival_time());
-            System.out.println("Turnaround time of P"+ (i+1) +": " +process.getTurnaround_time());
+            
             current_time += process.getCPU_burst();
             //waiting time
             process.setWaiting_time(process.getTurnaround_time() - process.getCPU_burst());
-            System.out.println("waiting time of P"+ (i+1) +": " + process.getWaiting_time());
-            allProcess.add(process);
+           
+            Q2.add(process);
         }
-         //average turnaround time
-        //  for(int i=0 ; allProcess.size()>i ;i++){
-        //     PCB process = (PCB)allProcess.get(i);
-        //     turnaround_time+=process.getTurnaround_time();
-        //     averageTurnAround = turnaround_time/allProcess.size();
-        //     waiting_time += process.getWaiting_time();
-        //     averageWaiting = waiting_time/allProcess.size();
-        //  }
-        // System.out.println("Average turnaround time: "+ averageTurnAround);
-        // System.out.println("Average waiting time: "+ averageWaiting);
+        
     }
 
 
