@@ -156,43 +156,59 @@ public static final int Quantum = 3;
 
                                 }
                             }
-                           while (!q2.isEmpty()) {
-    int i = 0;
-    process = q2.get(i);
-    q2.remove(i);
+                             while (!q2.isEmpty()) {
+                                int i = 0;
+                                process = q2.get(i);
+                                q2.remove(i);
 
-                               if (i!=q2.size()) {
+                                if (i != q2.size()) {
 
-                                process1 = q2.get(i);
-                                   q2.remove(i);
+                                    process1 = q2.get(i);
+                                    q2.remove(i);
 
                                     if (process.getArrival_time() < process1.getArrival_time()) {
+                                        if (process.getCPU_burst() < process1.getCPU_burst()) {
+
+                                            System.out.print("P" + process.getProcessID() + " | ");//
+                                            fileWriter.write("P" + process.getProcessID() + " | ");//
+                                            A.add(process);
+                                            A.add(process1);
+                                            q2.add(process1);
+                                        } else {
+                                            System.out.print("P" + process1.getProcessID() + " | ");//
+                                            fileWriter.write("P" + process1.getProcessID() + " | ");//  
+                                            A.add(process);
+                                            A.add(process1);
+                                            q2.add(process);
+
+                                        }
+                                    } else if (process.getCPU_burst() < process1.getCPU_burst()) {
 
                                         System.out.print("P" + process.getProcessID() + " | ");//
                                         fileWriter.write("P" + process.getProcessID() + " | ");//
                                         A.add(process);
+                                        A.add(process1);
                                         q2.add(process1);
-
                                     } else {
                                         System.out.print("P" + process1.getProcessID() + " | ");//
                                         fileWriter.write("P" + process1.getProcessID() + " | ");//  
                                         A.add(process);
-                                                                                q2.add(process);
-
+                                        A.add(process1);
+                                        q2.add(process);
 
                                     }
-
-                                } else {
+                                } else{
                                     System.out.print("P" + process.getProcessID() + " | ");//
                                     fileWriter.write("P" + process.getProcessID() + " | ");//
                                     A.add(process);
 
-
                                     break;
                                 }
-                                if(i==q2.size()-1)
-                                    break;
-                            }
+                                    if (i == q2.size() - 1) {
+                                        break;
+                                    }
+                                }
+                            
 
                             fileWriter.write("]\n");
                             System.out.print("]\n");
