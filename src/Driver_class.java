@@ -66,8 +66,8 @@ public class Driver_class {
                     //Q1 = Round_Robin((Queue<PCB>) q1);
                     Round_Robin(q1);
                     SJF(q2);
-                    System.out.println(q1);
-                    System.out.println((Q1).toString());
+                    //System.out.println(q1);
+                   // System.out.println((Q1).toString());
 
                     break;
 
