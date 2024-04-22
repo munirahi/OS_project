@@ -71,7 +71,6 @@
                         System.out.print("Please Enter Process first");
                     } else {
                         try {
-                   // A1=Q1;
                             PCB process;
 
                             FileWriter fileWriter = new FileWriter("Report.txt");
@@ -87,8 +86,6 @@
                             }
                             if( !Q2.isEmpty()){
                             for (int i = 0; i < Q2.size(); i++) {
-                               // SJF(q2);
-                                //SJFinfo( q2);
                                 process = Q2.get(i);
                                 System.out.print("P" + process.getProcessID() + " | ");//
                                 fileWriter.write("P" + process.getProcessID() + " | ");//
