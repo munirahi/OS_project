@@ -190,6 +190,7 @@
         current_time = 0;
 
         Queue<PCB> readyQueue = new LinkedList<>(processes);
+ ((List<PCB>) readyQueue).sort((p1, p2) -> Integer.compare(p1.getArrival_time(), p2.getArrival_time()));
 
         while (!readyQueue.isEmpty()) {
             process = (PCB) readyQueue.poll();
