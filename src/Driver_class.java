@@ -111,18 +111,16 @@
                            
                                 printProcessDetails( process,  fileWriter);
                             }
-                               
-                                for (int i = 0; Q2.size() > i; i++) {
-                                    process = (PCB) Q2.get(i);
-                                    process.setStart_Time(current_time);
-                                    process.setTermination_time(current_time + process.getCPU_burst());
-                                    process.setTurnaround_time(process.getTermination_time() - process.getArrival_time());
-                                    process.setResponse_time(process.getStart_Time()-process.getArrival_time());
-                                    current_time += process.getCPU_burst();                                   
-                                    process.setWaiting_time(process.getTurnaround_time() - process.getCPU_burst());
-                                   
-                                printProcessDetails( process,  fileWriter);
-                                
+                                              for (int l = 0; l < Q2.size(); l++) {
+
+                                process = (PCB) Q2.get(l);
+                                process.setStart_Time(current_time);
+                                process.setTermination_time(current_time + process.getCPU_burst());
+                                process.setTurnaround_time(process.getWaiting_time() + process.getCPU_burst());
+                                process.setResponse_time(process.getStart_Time() - process.getArrival_time());
+                                current_time += process.getCPU_burst();
+                                process.setWaiting_time(process.getTurnaround_time() - process.getCPU_burst());
+                                printProcessDetails(process, fileWriter);
 
                             }
 
