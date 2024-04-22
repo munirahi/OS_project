@@ -1,22 +1,34 @@
+import java.io.FileWriter;
+import java.io.IOException;
+import java.util.*;
 
-    public static Queue<PCB> Q1 = new LinkedList<>();
-    public static ArrayList<PCB> Q2= new ArrayList<>();
-    public static int processCounterRR;
-    public static int current_time;
-    public static final int Quantum = 3;
-    public static ArrayList<PCB> readyQ;
-    public static Queue<PCB> ComQ1 = new LinkedList<>();
-    public static Queue<PCB> ComQ2 = new LinkedList<>();
+public class Driver_class {
 
+        public static Queue<PCB> Q1 = new LinkedList<>();
+        public static ArrayList<PCB> Q2= new ArrayList<>();
+
+    //to test
+    public static  Queue<PCB> q1 = new LinkedList<>();
+    public static  Queue<PCB> q2_temp = new LinkedList<>();
+
+    public static Queue<PCB> readyQForAll =new LinkedList<>();
+        public static int processCounterRR;
+        public static int current_time;
+        public static final int Quantum = 3;
+        public static ArrayList<PCB> readyQ;
+        public static Queue<PCB> ComQ1 = new LinkedList<>();
+        public static Queue<PCB> ComQ2 = new LinkedList<>();
     public static void main(String[] args) {
         // TODO Auto-generated method stub
         Scanner scanner = new Scanner(System.in);
         int choice;
         int numProcesses = 0;
         int pID;
-        Queue<PCB> q1 = new LinkedList<>();
+       // Queue<PCB> q1 = new LinkedList<>();
         ArrayList<PCB> q2 = new ArrayList<>();
 
+        //to test
+       // Queue<PCB> q2_temp = new LinkedList<>();
         do {
             System.out.println("1. Enter process' information:");
             System.out.println("2. Report detailed information about each process and different scheduling criteria.");
@@ -49,6 +61,7 @@
                             // process.setProcessID("P" + ++processCounterRR);
                         } else {
                             q2.add(process);
+                            q2_temp.add(process);
                             ComQ2.add(process);//for generate report
                         }
                         //  }
@@ -65,8 +78,9 @@
 //int count=0;
                     Queue<PCB> A = new LinkedList<>();
                     Queue<PCB> A1 = new LinkedList<>();
-                  
-                    
+
+
+
                     if (Q1.isEmpty() && Q2.isEmpty()) {
                         System.out.print("Please Enter Process first");
                     } else {
@@ -171,13 +185,87 @@
 
                 case 3:
                     break;
+                case 4:
 
+                   ((List<PCB>) q1).sort(Comparator.comparingInt(PCB::getArrival_time));
+                    ((List<PCB>) q2_temp).sort(Comparator.comparingInt(PCB::getArrival_time));
+                    readyQ(q1,q2_temp);
                 default:
                     System.out.println("Invalid choice. Please try again.");
             }
 
         } while (choice != 3);
 
+    }
+
+
+    public static void readyQ(Queue Q1InReady,Queue Q2InReady){
+       PCB P_from1InReady = (PCB) Q1InReady.poll();
+       PCB  P_from2InReady = (PCB) Q2InReady.poll();
+
+        if(P_from1InReady.getArrival_time() <= P_from2InReady.getArrival_time()){
+           calc(P_from1InReady);
+            readyQForAll.add(P_from1InReady);
+           if (P_from1InReady.getTemp_CPU_burst()!= 0){
+               addToBeginning(Q1InReady,P_from1InReady);
+
+           }
+        } else {
+            int expectedEndTime = current_time +  P_from2InReady.getTemp_CPU_burst();
+            if( ((PCB)Q1InReady.peek()).getArrival_time() <= expectedEndTime){ // not sure about the =
+                // we should trim the sjf here
+
+            }
+
+            readyQForAll.add(P_from2InReady);
+            calc(P_from2InReady);
+            if (P_from2InReady.getTemp_CPU_burst()!= 0){
+                addToBeginning(Q2InReady,P_from2InReady);
+
+            }
+        }
+
+
+    }
+
+    public static <PCB> void addToBeginning(Queue<PCB> queue, PCB element) {
+        // Convert the Queue to a LinkedList
+        LinkedList<PCB> list = new LinkedList<>(queue);
+        // Add the element to the beginning of the LinkedList
+        list.addFirst(element);
+        // Clear the original Queue
+        queue.clear();
+        // Add all elements from the LinkedList back to the Queue
+        queue.addAll(list);
+    }
+
+    public static void calc(PCB p){
+
+        if (p.getStart_Time() == -1) {
+            p.setStart_Time(current_time);
+        }
+        if (p.getTemp_CPU_burst() > 3) {
+            p.setTemp_CPU_burst((p.getTemp_CPU_burst() - Quantum));
+            current_time += Quantum;
+            q1.add(p);
+
+            Q1.add(p);
+
+        } else {
+
+            p.setTermination_time(current_time + p.getTemp_CPU_burst());
+            current_time += p.getTemp_CPU_burst();
+            p.setTurnaround_time(current_time - p.getArrival_time());
+
+            p.setWaiting_time(p.getTurnaround_time() - p.getCPU_burst());
+            if (p.getTemp_CPU_burst() <= 3) {
+                Q1.add(p);
+            }
+            p.setTemp_CPU_burst(0);
+            q1.remove(p);
+            processCounterRR--;
+
+        }
     }
 
     public static void Round_Robin(Queue processes) {
@@ -275,7 +363,8 @@
 
     }
 
-}
+
+    }
 
 
 /*
