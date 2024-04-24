@@ -1,17 +1,11 @@
-import java.util.*;
-import java.util.ArrayList;
-import java.util.LinkedList;
-import java.util.Queue;
-import java.util.Scanner;
 import java.io.FileWriter;
 import java.io.IOException;
-import java.util.Collections;
-
+import java.util.*;
 
 public class Driver_class {
 
         public static Queue<PCB> Q1 = new LinkedList<>();
-        public static ArrayList<PCB> Q2= new ArrayList<>();
+        public static Queue<PCB> Q2 = new LinkedList<>();
 
     //to test
     public static  Queue<PCB> q1 = new LinkedList<>();
@@ -66,15 +60,16 @@ public class Driver_class {
                             ComQ1.add(process);//for generate report
                             // process.setProcessID("P" + ++processCounterRR);
                         } else {
-                            q2.add(process);
                             q2_temp.add(process);
+                            q2.add(process);
+                            
                             ComQ2.add(process);//for generate report
                         }
                         //  }
                     }//end for loop /report
                     //Q1 = Round_Robin((Queue<PCB>) q1);
                     Round_Robin(q1);
-                    SJF(q2);
+                    SJF(q2_temp);
                     // System.out.println(q1);
                     // System.out.println((Q1).toString());
 
@@ -84,6 +79,7 @@ public class Driver_class {
 //int count=0;
                     Queue<PCB> A = new LinkedList<>();
                     Queue<PCB> A1 = new LinkedList<>();
+                    Queue<PCB> B = new LinkedList<>();
 
 
 
@@ -105,8 +101,9 @@ public class Driver_class {
 
                             }
                             if( !Q2.isEmpty()){
-                            for (int i = 0; i < Q2.size(); i++) {
-                                process = Q2.get(i);
+                            while (!Q2.isEmpty()) {
+                                process = Q2.poll();
+                                B.add(process);
                                 System.out.print("P" + process.getProcessID() + " | ");//
                                 fileWriter.write("P" + process.getProcessID() + " | ");//
 
@@ -128,18 +125,18 @@ public class Driver_class {
                            
                                 printProcessDetails( process,  fileWriter);
                             }
-                                              for (int l = 0; l < Q2.size(); l++) {
+                                             // for (int l = 0; l < Q2.size(); l++) {
 
-                                process = (PCB) Q2.get(l);
-                                process.setStart_Time(current_time);
-                                process.setTermination_time(current_time + process.getCPU_burst());
-                                process.setTurnaround_time(process.getWaiting_time() + process.getCPU_burst());
-                                process.setResponse_time(process.getStart_Time() - process.getArrival_time());
-                                current_time += process.getCPU_burst();
-                                process.setWaiting_time(process.getTurnaround_time() - process.getCPU_burst());
-                                printProcessDetails(process, fileWriter);
+                                //process = (PCB) Q2.get(l);
+                                // process.setStart_Time(current_time);
+                                // process.setTermination_time(current_time + process.getCPU_burst());
+                                // process.setTurnaround_time(process.getWaiting_time() + process.getCPU_burst());
+                                // process.setResponse_time(process.getStart_Time() - process.getArrival_time());
+                                // current_time += process.getCPU_burst();
+                                // process.setWaiting_time(process.getTurnaround_time() - process.getCPU_burst());
+                                // printProcessDetails(process, fileWriter);
 
-                            }
+                            //}
 
                             // Calculate and print average turnaround time, waiting time, and response time
                             double totalTurnaroundTime1 = 0;
@@ -160,13 +157,24 @@ public class Driver_class {
                                 numProcesses += i;
 
                             }
-                            for (int i = 0; i < Q2.size(); i++) {
-                                process = Q2.get(i);
-                                totalTurnaroundTime2 += process.getTurnaround_time();
-                                totalWaitingTime2 += process.getWaiting_time();
-                                totalResponseTime2 += process.getResponse_time();
+                            while (!B.isEmpty()) {
+                                process = B.poll();
+
+                                totalTurnaroundTime1 += process.getTurnaround_time();
+                                totalWaitingTime1 += process.getWaiting_time();
+                                totalResponseTime1 += process.getResponse_time();
+                                int i = 0;
+                                i++;
                                 numProcesses += i;
+
                             }
+                            //for (int i = 0; i < Q2.size(); i++) {
+                                //process = Q2.get(i);
+                                // totalTurnaroundTime2 += process.getTurnaround_time();
+                                // totalWaitingTime2 += process.getWaiting_time();
+                                // totalResponseTime2 += process.getResponse_time();
+                                // numProcesses += i;
+                            //}
 
                             double totalTurnaroundTime = totalTurnaroundTime2 + totalTurnaroundTime1;
                             double totalWaitingTime = totalWaitingTime2 + totalWaitingTime1;
@@ -314,18 +322,23 @@ public class Driver_class {
 
     }
 
-    public static void SJF(ArrayList processes){
+    @SuppressWarnings("unchecked")
+    public static void SJF(Queue processes){
         int current_time= 0; //will be updated later
-        Collections.sort(processes);
+        Queue<PCB> readyQueue = new LinkedList<>(processes);
+        ((List<PCB>) readyQueue).sort((p1, p2) -> Integer.compare(p1.getCPU_burst(), p2.getCPU_burst()));
+        ((List<PCB>) readyQueue).sort((p1, p2) -> Integer.compare(p1.getArrival_time(), p2.getArrival_time()));
+
         
-        for (int i=0 ; processes.size()>i ;i++){
-            PCB process = (PCB)processes.get(i);
+        while (!readyQueue.isEmpty()){
+            PCB process = (PCB)readyQueue.poll();
            
             //turnaround
             process.setTermination_time(current_time + process.getCPU_burst());
             process.setTurnaround_time(process.getTermination_time() - process.getArrival_time());
-            
             current_time += process.getCPU_burst();
+            //response
+            //process.setResponse_time(process.getStart_Time()-process.getArrival_time());
             //waiting time
             process.setWaiting_time(process.getTurnaround_time() - process.getCPU_burst());
            
